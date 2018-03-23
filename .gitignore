@@ -38,3 +38,4 @@ out/
 /android/out/
 com_crashlytics_export_strings.xml
 
+*.blend1
