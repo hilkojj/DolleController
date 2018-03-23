@@ -1,5 +1,6 @@
-package app;
+package dollecontroller;
 
+import com.fazecast.jSerialComm.SerialPort;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +15,11 @@ public class Main extends Application {
         primaryStage.setTitle("Dolle controller !!");
         primaryStage.setScene(new Scene(root, 700, 600));
         primaryStage.show();
+
+		SerialPort ports[] = SerialPort.getCommPorts();
+
+		System.out.println(ports.length);
+
     }
 
     public static void main(String[] args) {
