@@ -22,6 +22,7 @@
 hs_err_pid*
 
 /out/
+out/
 
 ## Android Studio and Intellij and Android in general
 /android/libs/armeabi/
