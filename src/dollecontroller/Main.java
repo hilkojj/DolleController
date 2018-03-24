@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.util.Random;
+import java.util.Scanner;
 
 public class Main extends Application {
 
@@ -19,9 +19,7 @@ public class Main extends Application {
 		primaryStage.setScene(new Scene(root, 700, 600));
 		primaryStage.show();
 
-		SerialPort ports[] = SerialPort.getCommPorts();
 
-		System.out.println(ports.length);
 
 		new Thread(() -> {
 			Robot robot;
@@ -32,18 +30,73 @@ public class Main extends Application {
 				return;
 			}
 
-			long prevTime = System.currentTimeMillis();
-			while (true) {
-				long time = System.currentTimeMillis();
+//			long prevTime = System.currentTimeMillis();
+//			while (true) {
+//				long time = System.currentTimeMillis();
+//
+//				if (time - prevTime > 100) {
+////					robot.mouseMove((int) (Math.random() * 1000), (int) (Math.random() * 1000));
+//					robot.keyPress(87);
+//					robot.delay(100);
+//					robot.keyRelease(87);
+//					prevTime = time;
+//				}
+//			}
 
-				if (time - prevTime > 100) {
-					robot.mouseMove((int) (Math.random() * 1000), (int) (Math.random() * 1000));
-					robot.keyPress(84);
-					robot.delay(100);
-					robot.keyRelease(84);
-					prevTime = time;
-				}
+			SerialPort ports[] = SerialPort.getCommPorts();
+			SerialPort port = ports[0];
+
+			if (!port.openPort()) {
+				System.out.println("poep");
+				return;
 			}
+
+			port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
+
+			Scanner data = new Scanner(port.getInputStream());
+
+			int x, y;
+			x = y = 0;
+
+			loop:
+			while (true) {
+
+				if (data.hasNextLine()) {
+
+					String line = data.nextLine();
+
+					System.out.println(line);
+
+					if (line.length() < 3)
+						continue;
+
+					int value = 0;
+
+					try {
+						value = Integer.parseInt(line.substring(2));
+					} catch (Exception e) {
+						continue loop;
+					}
+
+					System.out.println(value);
+
+					switch (line.charAt(0)) {
+
+						case 'x':
+							x = 1024 - value;
+							break;
+
+						case 'y':
+							y = value;
+							break;
+
+					}
+				}
+
+				robot.mouseMove(960 + (x - 512) / 50, 540 + (y - 512) / 50);
+			}
+
+
 		}).start();
 	}
 
