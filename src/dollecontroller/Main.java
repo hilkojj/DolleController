@@ -93,7 +93,11 @@ public class Main extends Application {
 					}
 				}
 
-				robot.mouseMove(960 + (x - 512) / 50, 540 + (y - 512) / 50);
+				Point pointer = MouseInfo.getPointerInfo().getLocation();
+
+				System.out.println(pointer);
+
+				robot.mouseMove((int) pointer.getX() + (x - 512) / 50, (int) pointer.getY() + (y - 512) / 50);
 			}
 
 
