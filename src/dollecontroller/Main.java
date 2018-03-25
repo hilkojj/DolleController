@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -90,6 +91,21 @@ public class Main extends Application {
 							y = value;
 							break;
 
+						case 'k':
+							if (value == 5) {
+								robot.mousePress(InputEvent.BUTTON1_MASK);
+								robot.delay(20);
+								robot.mouseRelease(InputEvent.BUTTON1_MASK);
+							} else
+								robot.keyPress(value == 6 ? 87 : (value == 3 ? 65 : (value == 2 ? 83 : 68)));
+							break;
+
+						case 'r':
+							for (int i : new int[]{87, 65, 83, 68})
+								robot.keyRelease(i);
+							break;
+
+
 					}
 				}
 
@@ -97,7 +113,7 @@ public class Main extends Application {
 
 				System.out.println(pointer);
 
-				robot.mouseMove((int) pointer.getX() + (x - 512) / 50, (int) pointer.getY() + (y - 512) / 50);
+				robot.mouseMove((int) pointer.getX() + (x - 512) / 100, (int) pointer.getY() + (y - 512) / 100);
 			}
 
 
