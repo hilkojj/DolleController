@@ -1,4 +1,4 @@
-package dollecontroller;
+package com.dollecontroller;
 
 import com.fazecast.jSerialComm.SerialPort;
 
@@ -52,7 +52,7 @@ public class InputProcessor implements Runnable {
 	@Override
 	public void run() {
 
-		while (Main.running) {
+		while (DolleApp.running) {
 
 			if (port == null || !port.isOpen())
 				findPort();
@@ -60,7 +60,7 @@ public class InputProcessor implements Runnable {
 			if (scanner.hasNextLine())
 				processLine(scanner.nextLine());
 
-			for (Actuator actuator : Main.ACTUATORS)
+			for (Actuator actuator : DolleApp.actuators)
 				actuator.update();
 
 		}
