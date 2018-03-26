@@ -3,40 +3,44 @@ package com.dollecontroller;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
 public class DolleApp extends ApplicationAdapter {
 
 	public static Array<Actuator> actuators;
 	public static InputProcessor inputProcessor;
-	public static boolean running = true;
+	public static View3D view3D;
+	public static boolean running = true, inFront = true;
 
-	SpriteBatch batch;
-	Texture img;
-	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-
 		actuators = new Array<>();
 		inputProcessor = new InputProcessor();
+		view3D = new View3D();
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+		view3D.render();
 	}
-	
+
 	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
+	public void pause() {
+		inFront = false;
+		Gdx.graphics.setContinuousRendering(false);
+	}
+
+	@Override
+	public void resume() {
+		inFront = true;
+		Gdx.graphics.setContinuousRendering(true);
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		view3D.resize(width, height);
 	}
 }
