@@ -1,4 +1,4 @@
-package dollecontroller;
+package com.dollecontroller;
 
 public abstract class Actuator {
 
