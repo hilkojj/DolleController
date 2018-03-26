@@ -18,6 +18,8 @@ public class View3D {
 	private ModelInstance controllerModel;
 	private ModelBatch modelBatch;
 	private Environment environment;
+	private DirectionalLight light;
+	private float prevX, prevY, factor;
 
 	public View3D() {
 
@@ -30,10 +32,11 @@ public class View3D {
 		modelBatch = new ModelBatch();
 
 		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.6f, 1f));
+		light = new DirectionalLight().set(10, 10, 10, -1f, -0.8f, -0.2f);
+		environment.add(light);
 
-		cam.position.set(10, 10, 10);
+		cam.position.set(10, 0, 0);
 		cam.lookAt(new Vector3());
 		cam.near = 1f;
 		cam.far = 300f;
@@ -43,8 +46,21 @@ public class View3D {
 
 	public void render() {
 
-		cam.rotateAround(Vector3.Zero, Vector3.Y, 1);
+		float x = Gdx.input.getX(), y = Gdx.input.getY();
+
+		factor = factor * 3 + (Gdx.input.isButtonPressed(0) ? .4f : -.01f);
+		factor /= 4;
+
+		cam.rotateAround(Vector3.Zero, Vector3.Y, (prevX - x) * factor);
+		cam.position.y += (prevY - y) * factor * -.3f;
+		cam.position.nor().scl(10);
+		cam.lookAt(Vector3.Zero);
+
+		prevX = x;
+		prevY = y;
+
 		cam.update();
+		light.direction.set(cam.direction).rotate(Vector3.X, 60).rotate(Vector3.Z, 70);
 
 		modelBatch.begin(cam);
 		modelBatch.render(controllerModel, environment);
