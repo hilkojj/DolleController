@@ -28,7 +28,7 @@ public class View3D {
 	private float prevX, prevY, factor;
 	private SpriteBatch spriteBatch;
 	private ShaderProgram blurShader, lightShader;
-	private FrameBuffer frameBuffer, lightRaysBuffer;
+	private FrameBuffer modelBuffer, blurBuffer, lightRaysBuffer;
 	private Texture lightTexture;
 	private float[] lightRotations = {0, 10, 20}, lightRotationSpeed = {0.1f, .2f, -.1f};
 	private Color lightColor = new Color();
@@ -67,7 +67,8 @@ public class View3D {
 		System.out.println(lightShader.getLog());
 		ShaderProgram.pedantic = false;
 
-		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, 128, false);
+		modelBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, 128, false);
+		blurBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, 128, false);
 		lightRaysBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 512, 512, false);
 		lightTexture = new Texture(Gdx.files.internal("light.png"));
 		lightTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -92,19 +93,26 @@ public class View3D {
 		cam.update();
 		light.direction.set(cam.direction).rotate(Vector3.X, 60).rotate(Vector3.Z, 70);
 
-		frameBuffer.begin();
+		modelBuffer.begin();
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 
 		renderModel();
 
+		modelBuffer.end();
+
+		blurBuffer.begin();
+
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
+
 		spriteBatch.setShader(blurShader);
 		spriteBatch.begin();
-		spriteBatch.draw(frameBuffer.getColorBufferTexture(), 0, DEFAULT_HEIGHT, DEFAULT_WIDTH, -DEFAULT_HEIGHT);
+		spriteBatch.draw(modelBuffer.getColorBufferTexture(), 0, DEFAULT_HEIGHT, DEFAULT_WIDTH, -DEFAULT_HEIGHT);
 		spriteBatch.end();
 
-		frameBuffer.end();
+		blurBuffer.end();
 
 		lightRaysBuffer.begin();
 
@@ -128,7 +136,7 @@ public class View3D {
 		lightRaysBuffer.end();
 
 		spriteBatch.setShader(lightShader);
-		Texture blurMap = frameBuffer.getColorBufferTexture();
+		Texture blurMap = blurBuffer.getColorBufferTexture();
 		blurMap.bind(1);
 		Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
 		lightShader.begin();
