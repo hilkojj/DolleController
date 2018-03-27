@@ -49,7 +49,7 @@ public class View3D {
 		modelBatch = new ModelBatch();
 
 		environment = new Environment();
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.6f, 1f));
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 1, 1, 1, 1f));
 		light = new DirectionalLight().set(1, 1, 1, -1f, -0.8f, -0.2f);
 		environment.add(light);
 

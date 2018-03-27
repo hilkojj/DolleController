@@ -11,9 +11,8 @@ public class InputProcessor implements Runnable {
 
 		SEARCHING("Zoeken naar controller...", new Color(1, .2f, .2f, 1)),
 		CONNECTING("Verbinden...", new Color(.2f, 10, .5f, 1)),
-		CONNECTED("Dolle controlller pro edition 2019+ succesfol aangesloten!", new Color(.2f, .3f, 1, 1)),
-		FAILED("Kan poort nit openen! " +
-				"Heb je dit vaker geopend of is ardino Serial Monitor nog aan?", new Color(1, .7f, .5f, 1));
+		CONNECTED("Dolle controlller pro edition 2019+ succesfol aangesloten!", new Color(.2f, .4f, 1, 1)),
+		FAILED("Kan poort nit openen!", new Color(1, .6f, .2f, 1));
 
 		public String description;
 		public Color color;

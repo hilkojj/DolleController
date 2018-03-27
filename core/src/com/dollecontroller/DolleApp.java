@@ -62,4 +62,9 @@ public class DolleApp extends ApplicationAdapter {
 		view3D.resize(width, height);
 		ui.resize(width, height);
 	}
+
+	@Override
+	public void dispose() {
+		running = false;
+	}
 }
