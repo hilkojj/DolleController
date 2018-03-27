@@ -1,12 +1,31 @@
 package com.dollecontroller;
 
+import com.badlogic.gdx.graphics.Color;
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.util.Scanner;
 
 public class InputProcessor implements Runnable {
 
-	public String statusInfo = "het is vandaag geen kerst hoogstwaarschijnlijk";
+	public enum Status {
+
+		SEARCHING("Zoeken naar controller...", new Color(1, .2f, .2f, 1)),
+		CONNECTING("Verbinden...", new Color(.2f, 10, .5f, 1)),
+		CONNECTED("Dolle controlller pro edition 2019+ succesfol aangesloten!", new Color(.2f, .3f, 1, 1)),
+		FAILED("Kan poort nit openen! " +
+				"Heb je dit vaker geopend of is ardino Serial Monitor nog aan?", new Color(1, .7f, .5f, 1));
+
+		public String description;
+		public Color color;
+
+		Status(String description, Color color) {
+			this.description = description;
+			this.color = color;
+		}
+
+	}
+
+	public Status status = Status.SEARCHING;
 
 	private SerialPort port;
 	private Scanner scanner;
@@ -25,20 +44,16 @@ public class InputProcessor implements Runnable {
 
 			if (ports.length > 0 && ports[0].openPort()) {
 
-				statusInfo = "Verbinden...";
+				status = Status.CONNECTING;
 				port = ports[0];
 				port.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
 				scanner = new Scanner(port.getInputStream());
-				statusInfo = "Dolle controlller pro edition 2019+ succesfol aangesloten!";
+				status = Status.CONNECTED;
 				return;
 
 			}
 
-			statusInfo = ports.length == 0 ?
-					"Soeken naar controler..."
-					:
-					"Kan poort nit openen! " +
-					"Heb je dit vaker geopend of is ardino Serial Monitor nog aan?";
+			status = ports.length == 0 ? Status.SEARCHING : Status.FAILED;
 
 			try {
 				Thread.sleep(1000);
@@ -78,7 +93,8 @@ public class InputProcessor implements Runnable {
 
 			try {
 				i.value = Float.parseFloat(line.split("=")[1]);
-			} catch (Exception ignored) {}
+			} catch (Exception ignored) {
+			}
 
 		}
 	}

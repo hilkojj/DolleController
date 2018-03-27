@@ -2,10 +2,7 @@ package com.dollecontroller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -34,6 +31,7 @@ public class View3D {
 	private FrameBuffer frameBuffer, lightRaysBuffer;
 	private Texture lightTexture;
 	private float[] lightRotations = {0, 10, 20}, lightRotationSpeed = {0.1f, .2f, -.1f};
+	private Color lightColor = new Color();
 
 	public View3D() {
 
@@ -134,6 +132,9 @@ public class View3D {
 		blurMap.bind(1);
 		Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
 		lightShader.begin();
+		lightColor.lerp(DolleApp.inputProcessor.status.color, .2f);
+		lightColor.a = .3f;
+		lightShader.setUniformf("statusColor", lightColor);
 		lightShader.setUniformi("blurMap", 1);
 		spriteBatch.begin();
 
