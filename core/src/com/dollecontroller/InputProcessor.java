@@ -11,7 +11,7 @@ public class InputProcessor implements Runnable {
 
 		SEARCHING("Zoeken naar controller...", new Color(1, .2f, .2f, 1)),
 		CONNECTING("Verbinden...", new Color(.2f, 10, .5f, 1)),
-		CONNECTED("Dolle controlller pro edition 2019+ succesfol aangesloten!", new Color(.2f, .4f, 1, 1)),
+		CONNECTED("Dolle controlller pro edition 2019+ succesfol aangesloten!", new Color(.3f, .4f, 1, 1)),
 		FAILED("Kan poort nit openen!", new Color(1, .6f, .2f, 1));
 
 		public String description;
@@ -84,23 +84,23 @@ public class InputProcessor implements Runnable {
 	private void processLine(String line) {
 		if (line.startsWith("I.")) {
 
-			InputValue i = findInput(line);
+			Input i = findInput(line);
 			if (i == null) {
 				System.err.println("Unrecognized input: " + line);
 				return;
 			}
 
 			try {
-				i.value = Float.parseFloat(line.split("=")[1]);
+				i.value = line.split("=")[1];
 			} catch (Exception ignored) {
 			}
 
 		}
 	}
 
-	private InputValue findInput(String line) {
+	private Input findInput(String line) {
 
-		for (InputValue i : InputValue.values())
+		for (Input i : Input.values())
 			if (line.contains(i.name()))
 				return i;
 

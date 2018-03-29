@@ -15,16 +15,17 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 
-import static com.dollecontroller.DolleApp.DEFAULT_HEIGHT;
-import static com.dollecontroller.DolleApp.DEFAULT_WIDTH;
+import static com.dollecontroller.DolleApp.HEIGHT;
+import static com.dollecontroller.DolleApp.WIDTH;
 
 public class View3D {
 
-	private PerspectiveCamera cam;
+	public PerspectiveCamera cam;
+
 	private ModelInstance controllerModel;
 	private ModelBatch modelBatch;
 	private Environment environment;
-	private DirectionalLight light;
+	private DirectionalLight light0, light1;
 	private float prevX, prevY, factor;
 	private SpriteBatch spriteBatch;
 	private ShaderProgram blurShader, lightShader;
@@ -50,19 +51,20 @@ public class View3D {
 
 		environment = new Environment();
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 1, 1, 1, 1f));
-		light = new DirectionalLight().set(1, 1, 1, -1f, -0.8f, -0.2f);
-		environment.add(light);
+		light0 = new DirectionalLight().set(1, .9f, .5f, -1f, -0.8f, -0.2f);
+		light1 = new DirectionalLight().set(0.6f, 0.7f, 1, -1f, -0.8f, -0.2f);
+		environment.add(light0, light1);
 
 		spriteBatch = new SpriteBatch();
 
 		blurShader = new ShaderProgram(
 				SpriteBatch.createDefaultShader().getVertexShaderSource(),
-				Gdx.files.internal("blur.glsl").readString()
+				Gdx.files.internal("glsl/blur.glsl").readString()
 		);
 		System.out.println(blurShader.getLog());
 		lightShader = new ShaderProgram(
 				SpriteBatch.createDefaultShader().getVertexShaderSource(),
-				Gdx.files.internal("light.glsl").readString()
+				Gdx.files.internal("glsl/light.glsl").readString()
 		);
 		System.out.println(lightShader.getLog());
 		ShaderProgram.pedantic = false;
@@ -70,7 +72,7 @@ public class View3D {
 		modelBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, 128, false);
 		blurBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, 128, false);
 		lightRaysBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 512, 512, false);
-		lightTexture = new Texture(Gdx.files.internal("light.png"));
+		lightTexture = new Texture(Gdx.files.internal("images/light.png"));
 		lightTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 	}
@@ -91,7 +93,9 @@ public class View3D {
 		prevY = y;
 
 		cam.update();
-		light.direction.set(cam.direction).rotate(Vector3.X, 60).rotate(Vector3.Z, 70);
+		light0.direction.set(cam.direction).rotate(Vector3.X, 60).rotate(Vector3.Z, 70);
+		light1.color.set(lightColor).lerp(1, 1, 1, 1, .5f);
+		light1.direction.set(cam.direction).rotate(Vector3.X, -50).rotate(Vector3.Z, -10);
 
 		modelBuffer.begin();
 
@@ -109,7 +113,7 @@ public class View3D {
 
 		spriteBatch.setShader(blurShader);
 		spriteBatch.begin();
-		spriteBatch.draw(modelBuffer.getColorBufferTexture(), 0, DEFAULT_HEIGHT, DEFAULT_WIDTH, -DEFAULT_HEIGHT);
+		spriteBatch.draw(modelBuffer.getColorBufferTexture(), 0, HEIGHT, WIDTH, -HEIGHT);
 		spriteBatch.end();
 
 		blurBuffer.end();
@@ -126,7 +130,7 @@ public class View3D {
 
 			lightRotations[i] += lightRotationSpeed[i];
 
-			spriteBatch.draw(lightTexture, 0, 0, DEFAULT_WIDTH / 2, DEFAULT_HEIGHT / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT, 1, 1,
+			spriteBatch.draw(lightTexture, 0, 0, WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT, 1, 1,
 					lightRotations[i], 0, 0, 512, 512, false, false);
 		}
 
@@ -146,7 +150,7 @@ public class View3D {
 		lightShader.setUniformi("blurMap", 1);
 		spriteBatch.begin();
 
-		spriteBatch.draw(lightRaysBuffer.getColorBufferTexture(), 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		spriteBatch.draw(lightRaysBuffer.getColorBufferTexture(), 0, 0, WIDTH, HEIGHT);
 
 		spriteBatch.end();
 		lightShader.end();

@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class DolleApp extends ApplicationAdapter {
 
-	public static final int DEFAULT_WIDTH = 1280, DEFAULT_HEIGHT = 720;
+	public static final int WIDTH = 1600, HEIGHT = 900;
 
 	public static Array<Actuator> actuators;
 	public static InputProcessor inputProcessor;
@@ -27,7 +27,7 @@ public class DolleApp extends ApplicationAdapter {
 		view3D = new View3D();
 		ui = new UI();
 
-		background = new Texture(Gdx.files.internal("background.png"));
+		background = new Texture(Gdx.files.internal("images/background.png"));
 		spriteBatch = new SpriteBatch();
 	}
 
@@ -38,7 +38,7 @@ public class DolleApp extends ApplicationAdapter {
 
 		// render background (stretched)
 		spriteBatch.begin();
-		spriteBatch.draw(background, 0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		spriteBatch.draw(background, 0, 0, WIDTH, HEIGHT);
 		spriteBatch.end();
 
 		view3D.render();
