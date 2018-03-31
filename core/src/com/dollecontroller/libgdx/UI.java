@@ -1,4 +1,4 @@
-package com.dollecontroller;
+package com.dollecontroller.libgdx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -11,10 +11,21 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.dollecontroller.DolleApp;
+import com.dollecontroller.input.Input;
+import com.dollecontroller.javafx.EditDialogController;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 import static com.dollecontroller.DolleApp.HEIGHT;
 import static com.dollecontroller.DolleApp.WIDTH;
-import static com.dollecontroller.Input.*;
+import static com.dollecontroller.input.Input.*;
 
 public class UI {
 
@@ -82,8 +93,11 @@ public class UI {
 			Gdx.files.internal("glsl/button.glsl").readString()
 	);
 	private float pressTimer = 0;
+	private boolean down, prevDown;
 
 	public void render() {
+
+		down = Gdx.input.isButtonPressed(0);
 
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
@@ -101,6 +115,8 @@ public class UI {
 
 		batch.end();
 
+		prevDown = Gdx.input.isButtonPressed(0);
+
 	}
 
 	private Vector3 temp = new Vector3();
@@ -117,7 +133,7 @@ public class UI {
 		for (Input i : box.inputs) {
 			inputs++;
 
-			float bX = box.position.x + 40, bY = box.position.y + 210 - inputs * 43;
+			float bX = box.position.x + 40, bY = box.position.y + 210 - inputs * 44;
 
 			renderInputButton(i, bX, bY);
 
@@ -157,12 +173,15 @@ public class UI {
 		mouseX -= x;
 		mouseX /= buttonTexture.getWidth();
 
-		if (Gdx.input.isButtonPressed(0))
+		if (down)
 			pressTimer = Math.min(1, pressTimer + .01f);
 		else
 			pressTimer = Math.max(pressTimer - .006f, 0);
 
 		if (mouseOverInputButton(x, y)) {
+
+			if (prevDown && !down)
+				showEditDialog(i);
 
 			batch.end();
 			batch.setShader(buttonShader);
@@ -180,6 +199,9 @@ public class UI {
 		}
 
 		batch.draw(i.icon, x + 5, y + 5);
+
+		if (i.actuator != null)
+			font.draw(batch, i.actuator.toString(), x + 42, y + 29);
 	}
 
 	private boolean mouseOverInputButton(float x, float y) {
@@ -248,6 +270,30 @@ public class UI {
 		}
 
 		batch.setColor(Color.WHITE);
+	}
+
+	private void showEditDialog(Input i) {
+		Platform.runLater(() -> {
+
+			try {
+
+				FXMLLoader loader = new FXMLLoader();
+				Parent p = loader.load(Gdx.files.internal("fxml/edit.fxml").read());
+				EditDialogController c = loader.getController();
+				c.init(i);
+
+				Stage stage = new Stage();
+				stage.getIcons().add(new Image(Gdx.files.internal(i.iconPath).read()));
+				stage.setTitle(i.name);
+				stage.setScene(new Scene(p, 480, 300));
+				stage.setResizable(false);
+				stage.show();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		});
 	}
 
 	public void resize(int width, int height) {

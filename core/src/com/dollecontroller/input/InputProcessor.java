@@ -1,6 +1,7 @@
-package com.dollecontroller;
+package com.dollecontroller.input;
 
 import com.badlogic.gdx.graphics.Color;
+import com.dollecontroller.DolleApp;
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.util.Scanner;
@@ -29,7 +30,7 @@ public class InputProcessor implements Runnable {
 	private SerialPort port;
 	private Scanner scanner;
 
-	InputProcessor() {
+	public InputProcessor() {
 		new Thread(this).start();
 	}
 
@@ -73,9 +74,6 @@ public class InputProcessor implements Runnable {
 
 			if (scanner.hasNextLine())
 				processLine(scanner.nextLine());
-
-			for (Actuator actuator : DolleApp.actuators)
-				actuator.update();
 
 		}
 

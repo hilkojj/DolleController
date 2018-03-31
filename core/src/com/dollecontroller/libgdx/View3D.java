@@ -1,4 +1,4 @@
-package com.dollecontroller;
+package com.dollecontroller.libgdx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.ModelLoader;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.dollecontroller.DolleApp;
 
 import static com.dollecontroller.DolleApp.HEIGHT;
 import static com.dollecontroller.DolleApp.WIDTH;
