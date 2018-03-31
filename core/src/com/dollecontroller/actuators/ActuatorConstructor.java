@@ -1,6 +1,8 @@
 package com.dollecontroller.actuators;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.dollecontroller.DolleApp;
 import com.dollecontroller.input.Input;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +31,11 @@ public enum ActuatorConstructor {
 					public Slider slider;
 					@FXML
 					public CheckBox invertY;
+
+					@FXML
+					public void resetSlider() {
+						slider.adjustValue(1);
+					}
 
 					@Override
 					public void show(AnchorPane settingsPane) {
@@ -124,6 +131,33 @@ public enum ActuatorConstructor {
 			}
 
 		}
+
+	}
+
+	public static void saveConfig() {
+
+		FileHandle f = Gdx.files.local("configs/" + DolleApp.configName + ".dollecontroller");
+
+		String s = "";
+
+		for (Input i : Input.values()) {
+
+			if (i.actuator == null)
+				continue;
+
+			s += i.name() + "->" + i.actuatorConstructor.name() + "(";
+
+			boolean first = true;
+
+			for (String arg : i.constructorArgs) {
+				s += (!first ? ", " : "") + arg;
+				first = false;
+			}
+			s += ")\n";
+
+		}
+
+		f.writeString(s, false);
 
 	}
 

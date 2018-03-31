@@ -45,7 +45,7 @@ public class View3D {
 		cam.update();
 
 		ModelLoader loader = new ObjLoader();
-		Model model = loader.loadModel(Gdx.files.internal("controller.obj"));
+		Model model = loader.loadModel(Gdx.files.internal("models/controller.obj"));
 		controllerModel = new ModelInstance(model);
 
 		modelBatch = new ModelBatch();

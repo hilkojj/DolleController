@@ -42,9 +42,13 @@ public class EditDialogController {
 
 	@FXML
 	public void apply() {
-		input.actuatorConstructor = dropDown.getValue();
-		input.constructorArgs = settings.getArgs();
-		input.actuator = input.actuatorConstructor.constructor.construct(input.constructorArgs);
+
+		if (settings != null) {
+			input.actuatorConstructor = dropDown.getValue();
+			input.constructorArgs = settings.getArgs();
+			input.actuator = input.actuatorConstructor.constructor.construct(input.constructorArgs);
+			ActuatorConstructor.saveConfig();
+		}
 
 		close();
 	}

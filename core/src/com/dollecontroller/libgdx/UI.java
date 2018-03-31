@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -87,7 +88,9 @@ public class UI {
 			dot = new Texture(Gdx.files.internal("images/dot.png")),
 			buttonTexture = new Texture(Gdx.files.internal("images/value.png"));
 	private Color infoIconColor = new Color();
-	private BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
+	private BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/font.fnt"));
+	private BitmapFont largeFont = new BitmapFont(Gdx.files.internal("fonts/large.fnt"));
+	private GlyphLayout titleLayout = new GlyphLayout(font, "");
 	private ShaderProgram buttonShader = new ShaderProgram(
 			SpriteBatch.createDefaultShader().getVertexShaderSource(),
 			Gdx.files.internal("glsl/button.glsl").readString()
@@ -101,6 +104,11 @@ public class UI {
 
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
+
+		if (Input.LEFT_JOYSTICK.value != null)
+			titleLayout.setText(largeFont, Input.LEFT_JOYSTICK.value);
+
+		largeFont.draw(batch, titleLayout, WIDTH / 2f - titleLayout.width / 2f, HEIGHT - 64);
 
 		infoIconColor.lerp(DolleApp.inputProcessor.status.color, .3f);
 		batch.setColor(infoIconColor);

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.dollecontroller.input.Input;
 import com.dollecontroller.input.InputProcessor;
 import com.dollecontroller.libgdx.UI;
 import com.dollecontroller.libgdx.View3D;
@@ -20,6 +21,7 @@ public class DolleApp extends Application implements ApplicationListener {
 	public static View3D view3D;
 	public static UI ui;
 	public static boolean running = true, inFront = true;
+	public static String configName = "Configuratie 1";
 
 	private Texture background;
 	private SpriteBatch spriteBatch;
@@ -33,6 +35,33 @@ public class DolleApp extends Application implements ApplicationListener {
 		background = new Texture(Gdx.files.internal("images/background.png"));
 		spriteBatch = new SpriteBatch();
 		new Thread(Application::launch).start();
+		new Thread(() -> {
+
+			long prevTime = System.currentTimeMillis();
+
+			while (running) {
+
+				long time = System.currentTimeMillis();
+				long delta = time - prevTime;
+
+				if (inputProcessor.status == InputProcessor.Status.CONNECTED) {
+
+					for (Input i : Input.values())
+						if (i.actuator != null && i.value != null)
+							i.actuator.update(i, delta);
+				}
+
+				if (delta < 5) {
+					try {
+						Thread.sleep(5 - delta);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				prevTime = time;
+			}
+
+		}, "Actuators").start();
 	}
 
 	@Override

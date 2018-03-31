@@ -2,8 +2,20 @@ package com.dollecontroller.actuators;
 
 import com.dollecontroller.input.Input;
 
+import java.awt.*;
+
 public abstract class Actuator {
 
-	public abstract void update(Input i);
+	static Robot robot;
+
+	static {
+		try {
+			robot = new Robot();
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public abstract void update(Input i, long deltaTime);
 
 }

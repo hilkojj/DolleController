@@ -4,13 +4,13 @@ const byte numRows= 4;
 
 const byte numCols= 4;
 
-String keymap[numRows][numCols]= { {"0ghfghfg", "1", "2", "3"},
+char keymap[numRows][numCols]= { {'0', '1', '2', '3'},
 
-{"4", "5", "6", "7"},
+{'4', '5', '6', '7'},
 
-{"8", "9", "A", "B"},
+{'8', '9', 'A', 'B'},
 
-{"C", "D", "E", "F"} };
+{'C', 'D', 'E', 'F'} };
 
 byte rowPins[numRows] = {9,8,7,6}; //Rows 0 to 3
 
@@ -36,9 +36,9 @@ void loop() {
 //  } else if (myKeypad.getState() == RELEASED) {
 //    Serial.println("r:0");
 //  }
-  Serial.print("I.X_LEFT=");
-  Serial.println(analogRead(xPin));
-  Serial.print("I.Y_LEFT=");  
+  Serial.print("I.LEFT_JOYSTICK=");
+  Serial.print(1024 - analogRead(xPin));
+  Serial.print(",");
   Serial.println(analogRead(yPin));
  
 }

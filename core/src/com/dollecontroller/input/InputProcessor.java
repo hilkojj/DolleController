@@ -31,7 +31,7 @@ public class InputProcessor implements Runnable {
 	private Scanner scanner;
 
 	public InputProcessor() {
-		new Thread(this).start();
+		new Thread(this, "InputProcessor").start();
 	}
 
 	private void findPort() {
