@@ -35,7 +35,7 @@ public class DolleApp extends Application implements ApplicationListener {
 	private SpriteBatch spriteBatch;
 
 	@Override
-	public void create () {
+	public void create() {
 		inputProcessor = new InputProcessor();
 		view3D = new View3D();
 		ui = new UI();
@@ -77,7 +77,7 @@ public class DolleApp extends Application implements ApplicationListener {
 	}
 
 	@Override
-	public void render () {
+	public void render() {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -86,14 +86,16 @@ public class DolleApp extends Application implements ApplicationListener {
 			prevBackgroundPath = backgroundPath;
 
 			FileHandle f = new FileHandle(new File(backgroundPath));
-			if (!f.exists()) {
-				f = Gdx.files.internal("images/background.png");
-				PreferencesController.PREFERENCES.put("backgroundPath", "");
-				PreferencesController.savePreferences();
-				prevBackgroundPath = "";
+			if (!f.exists())
+				resetBackground();
+
+			else try {
+				background = new Texture(f);
+			} catch (Exception e) {
+				e.printStackTrace();
+				resetBackground();
 			}
 
-			background = new Texture(f);
 		}
 
 		// render background (stretched)
@@ -103,6 +105,13 @@ public class DolleApp extends Application implements ApplicationListener {
 
 		view3D.render();
 		ui.render();
+	}
+
+	private void resetBackground() {
+		PreferencesController.PREFERENCES.put("backgroundPath", "");
+		PreferencesController.savePreferences();
+		prevBackgroundPath = "";
+		background = new Texture(Gdx.files.internal("images/background.png"));
 	}
 
 	@Override
