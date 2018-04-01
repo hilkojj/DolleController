@@ -24,10 +24,10 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TextField layoutX="13.0" layoutY="200.0" prefHeight="31.0" prefWidth="369.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="218.0" AnchorPane.topAnchor="200.0" />
-      <Button layoutX="390.0" layoutY="200.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="114.0" text="bladderen" AnchorPane.rightAnchor="96.0" AnchorPane.topAnchor="200.0" />
+      <TextField fx:id="backgroundPath" editable="false" layoutX="13.0" layoutY="200.0" prefHeight="31.0" prefWidth="369.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="218.0" AnchorPane.topAnchor="200.0" />
+      <Button layoutX="390.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#chooseBackgroundFile" prefHeight="31.0" prefWidth="114.0" text="bladderen" AnchorPane.rightAnchor="96.0" AnchorPane.topAnchor="200.0" />
       <Label layoutX="14.0" layoutY="173.0" text="Custom achtergrond:" />
-      <Button layoutX="511.0" layoutY="200.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="80.0" text="reset" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="200.0" />
+      <Button layoutX="511.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#resetBackground" prefHeight="31.0" prefWidth="80.0" text="reset" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="200.0" />
       <Button layoutX="511.0" layoutY="361.0" mnemonicParsing="false" onMouseClicked="#close" prefHeight="31.0" prefWidth="80.0" text="doei" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="9.0" />
    </children>
 </AnchorPane>

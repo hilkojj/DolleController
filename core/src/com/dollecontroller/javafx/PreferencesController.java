@@ -6,13 +6,12 @@ import com.dollecontroller.DolleApp;
 import com.dollecontroller.actuators.ActuatorConstructor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +20,9 @@ public class PreferencesController {
 
 	public static final HashMap<String, String> PREFERENCES = new HashMap<>();
 	public static final String PATH = "dollecontroller/dolle.voorkeuren";
+
+	@FXML
+	public TextField backgroundPath;
 
 	public static void savePreferences() {
 
@@ -67,6 +69,8 @@ public class PreferencesController {
 
 	@FXML
 	public void initialize() {
+
+		backgroundPath.setText(PREFERENCES.getOrDefault("backgroundPath", ""));
 
 		boolean selected = false;
 
@@ -153,6 +157,7 @@ public class PreferencesController {
 
 	}
 
+	@FXML
 	public void deleteConfig(MouseEvent mouseEvent) {
 
 		close();
@@ -177,6 +182,32 @@ public class PreferencesController {
 		}
 
 		DolleApp.ui.showPreferences();
+
+	}
+
+	@FXML
+	public void chooseBackgroundFile(MouseEvent mouseEvent) {
+
+		close();
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(
+				new FileChooser.ExtensionFilter("Platjes", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
+		);
+		File file = fileChooser.showOpenDialog(null);
+
+		PREFERENCES.put("backgroundPath", file.getAbsolutePath());
+		savePreferences();
+
+		DolleApp.ui.showPreferences();
+	}
+
+	@FXML
+	public void resetBackground(MouseEvent mouseEvent) {
+
+		PREFERENCES.put("backgroundPath", "");
+		savePreferences();
+		backgroundPath.setText("");
 
 	}
 
