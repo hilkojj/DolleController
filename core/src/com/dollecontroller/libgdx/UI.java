@@ -328,7 +328,7 @@ public class UI {
 		});
 	}
 
-	private void showPreferences() {
+	public void showPreferences() {
 		Platform.runLater(() -> {
 
 			try {

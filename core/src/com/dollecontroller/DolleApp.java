@@ -5,8 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.dollecontroller.actuators.ActuatorConstructor;
 import com.dollecontroller.input.Input;
 import com.dollecontroller.input.InputProcessor;
+import com.dollecontroller.javafx.PreferencesController;
 import com.dollecontroller.libgdx.UI;
 import com.dollecontroller.libgdx.View3D;
 import javafx.application.Application;
@@ -16,6 +18,7 @@ import javafx.stage.Stage;
 public class DolleApp extends Application implements ApplicationListener {
 
 	public static final int WIDTH = 1600, HEIGHT = 900;
+	public static final String DEFAULT_CONFIG_NAME = "Configuratie 1";
 
 	public static InputProcessor inputProcessor;
 	public static View3D view3D;
@@ -33,8 +36,12 @@ public class DolleApp extends Application implements ApplicationListener {
 		view3D = new View3D();
 		ui = new UI();
 
+		PreferencesController.loadPreferences();
+		ActuatorConstructor.loadConfig(PreferencesController.PREFERENCES.getOrDefault("lastConfig", DEFAULT_CONFIG_NAME));
+
 		background = new Texture(Gdx.files.internal("images/background.png"));
 		spriteBatch = new SpriteBatch();
+
 		new Thread(Application::launch).start();
 		new Thread(() -> {
 

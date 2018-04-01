@@ -10,9 +10,9 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dollecontroller.javafx.PreferencesController">
    <children>
-      <ChoiceBox fx:id="configDropDown" onAction="#onConfigSelect" layoutX="14.0" layoutY="67.0" prefHeight="42.0" prefWidth="369.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="217.0" AnchorPane.topAnchor="67.0" />
-      <Button layoutX="392.0" layoutY="67.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="71.0" text="Nieuw" AnchorPane.rightAnchor="139.0" AnchorPane.topAnchor="67.0" />
-      <Button layoutX="468.0" layoutY="67.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="123.0" text="Verwijderen" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="67.0" />
+      <ChoiceBox fx:id="configDropDown" layoutX="14.0" layoutY="67.0" onAction="#onConfigSelect" prefHeight="42.0" prefWidth="369.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="217.0" AnchorPane.topAnchor="67.0" />
+      <Button layoutX="392.0" layoutY="67.0" mnemonicParsing="false" onMouseClicked="#newConfig" prefHeight="42.0" prefWidth="71.0" text="Nieuw" AnchorPane.rightAnchor="139.0" AnchorPane.topAnchor="67.0" />
+      <Button layoutX="468.0" layoutY="67.0" mnemonicParsing="false" onMouseClicked="#deleteConfig" prefHeight="42.0" prefWidth="123.0" text="Verwijderen" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="67.0" />
       <Label layoutX="14.0" layoutY="27.0" text="Configuratie:">
          <font>
             <Font size="20.0" />

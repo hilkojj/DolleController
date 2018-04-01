@@ -163,6 +163,34 @@ public enum ActuatorConstructor {
 
 	public static void loadConfig(String name) {
 
+		FileHandle f = Gdx.files.local("dollecontroller/" + name + ".dollecontroller");
+
+		if (!f.exists())
+			f = Gdx.files.internal("defaultConfig.dollecontroller");
+
+		try {
+
+			String[] lines = f.readString().split("\\r?\\n");
+
+			for (String l : lines) {
+
+				String[] keyAndValue = l.split("->");
+
+				Input i = Input.valueOf(keyAndValue[0]);
+
+				ActuatorConstructor a = ActuatorConstructor.valueOf(keyAndValue[1].split("\\(")[0]);
+				String[] args = keyAndValue[1].split("\\(")[1].split("\\)")[0].split(", ");
+
+				i.actuatorConstructor = a;
+				i.constructorArgs = args;
+				i.actuator = i.actuatorConstructor.constructor.construct(args);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		DolleApp.configName = name;
 	}
 
