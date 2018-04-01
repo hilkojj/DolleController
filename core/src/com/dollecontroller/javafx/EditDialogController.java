@@ -1,5 +1,6 @@
 package com.dollecontroller.javafx;
 
+import com.dollecontroller.DolleApp;
 import com.dollecontroller.actuators.ActuatorConstructor;
 import com.dollecontroller.input.Input;
 import javafx.event.ActionEvent;
@@ -56,6 +57,7 @@ public class EditDialogController {
 	@FXML
 	public void close() {
 		((Stage) dropDown.getScene().getWindow()).close();
+		DolleApp.dialogs--;
 	}
 
 	@FXML

@@ -80,21 +80,29 @@ public class UI {
 
 	private OrthographicCamera cam = new OrthographicCamera();
 	private SpriteBatch batch = new SpriteBatch();
+
 	private Sprite
 			boxSprite = new Sprite(new Texture(Gdx.files.internal("images/box.png"))),
 			line = new Sprite(new Texture(Gdx.files.internal("images/line.png")));
+
 	private Texture
 			controllerIcon = new Texture(Gdx.files.internal("images/controllerIcon.png")),
 			dot = new Texture(Gdx.files.internal("images/dot.png")),
-			buttonTexture = new Texture(Gdx.files.internal("images/value.png"));
+			buttonTexture = new Texture(Gdx.files.internal("images/value.png")),
+			settingsButton = new Texture(Gdx.files.internal("images/settings.png")),
+			settingsButtonHover = new Texture(Gdx.files.internal("images/settingsHover.png"));
+
 	private Color infoIconColor = new Color();
+
 	private BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/font.fnt"));
 	private BitmapFont largeFont = new BitmapFont(Gdx.files.internal("fonts/large.fnt"));
 	private GlyphLayout titleLayout = new GlyphLayout(font, "");
+
 	private ShaderProgram buttonShader = new ShaderProgram(
 			SpriteBatch.createDefaultShader().getVertexShaderSource(),
 			Gdx.files.internal("glsl/button.glsl").readString()
 	);
+
 	private float pressTimer = 0;
 	private boolean down, prevDown;
 
@@ -105,10 +113,24 @@ public class UI {
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 
-		if (Input.LEFT_JOYSTICK.value != null)
-			titleLayout.setText(largeFont, Input.LEFT_JOYSTICK.value);
-
+		titleLayout.setText(largeFont, DolleApp.configName);
 		largeFont.draw(batch, titleLayout, WIDTH / 2f - titleLayout.width / 2f, HEIGHT - 64);
+
+		int
+				buttonX = (int) (WIDTH / 2f + titleLayout.width / 2f + 15),
+				buttonY = HEIGHT - 112,
+				mouseX = Gdx.input.getX(), mouseY = HEIGHT - Gdx.input.getY();
+
+		if (mouseX > buttonX && mouseX < buttonX + settingsButton.getWidth()
+				&& mouseY > buttonY && mouseY < buttonY + settingsButton.getHeight()) {
+
+			batch.draw(settingsButtonHover, buttonX, buttonY);
+
+			if (down && !prevDown)
+				showPreferences();
+
+		} else
+			batch.draw(settingsButton, buttonX, buttonY);
 
 		infoIconColor.lerp(DolleApp.inputProcessor.status.color, .3f);
 		batch.setColor(infoIconColor);
@@ -294,7 +316,9 @@ public class UI {
 				stage.getIcons().add(new Image(Gdx.files.internal(i.iconPath).read()));
 				stage.setTitle(i.name);
 				stage.setScene(new Scene(p, 480, 300));
+				stage.setAlwaysOnTop(true);
 				stage.setResizable(false);
+				countDialogs(stage);
 				stage.show();
 
 			} catch (IOException e) {
@@ -302,6 +326,34 @@ public class UI {
 			}
 
 		});
+	}
+
+	private void showPreferences() {
+		Platform.runLater(() -> {
+
+			try {
+
+				FXMLLoader loader = new FXMLLoader();
+				Parent p = loader.load(Gdx.files.internal("fxml/preferences.fxml").read());
+
+				Stage stage = new Stage();
+				stage.getIcons().add(new Image(Gdx.files.internal("images/settings.png").read()));
+				stage.setTitle("Voorkueren");
+				stage.setScene(new Scene(p, 650, 400));
+				stage.setAlwaysOnTop(true);
+				countDialogs(stage);
+				stage.show();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		});
+	}
+
+	private void countDialogs(Stage stage) {
+		DolleApp.dialogs++;
+		stage.setOnCloseRequest(event -> DolleApp.dialogs--);
 	}
 
 	public void resize(int width, int height) {

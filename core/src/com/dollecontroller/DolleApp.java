@@ -22,6 +22,7 @@ public class DolleApp extends Application implements ApplicationListener {
 	public static UI ui;
 	public static boolean running = true, inFront = true;
 	public static String configName = "Configuratie 1";
+	public static int dialogs;
 
 	private Texture background;
 	private SpriteBatch spriteBatch;
@@ -80,6 +81,8 @@ public class DolleApp extends Application implements ApplicationListener {
 
 	@Override
 	public void pause() {
+		if (dialogs > 0)
+			return;
 		inFront = false;
 		Gdx.graphics.setContinuousRendering(false);
 	}

@@ -136,7 +136,7 @@ public enum ActuatorConstructor {
 
 	public static void saveConfig() {
 
-		FileHandle f = Gdx.files.local("configs/" + DolleApp.configName + ".dollecontroller");
+		FileHandle f = Gdx.files.local("dollecontroller/" + DolleApp.configName + ".dollecontroller");
 
 		String s = "";
 
@@ -159,6 +159,11 @@ public enum ActuatorConstructor {
 
 		f.writeString(s, false);
 
+	}
+
+	public static void loadConfig(String name) {
+
+		DolleApp.configName = name;
 	}
 
 }
