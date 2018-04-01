@@ -8,7 +8,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -63,11 +66,54 @@ public enum ActuatorConstructor {
 	),
 	KEY(
 			"Toets indrukken",
-			args -> null,
+			args -> new KeyActuator(Integer.parseInt(args[0])),
 			() -> {
 				return new Settings() {
+
+					int keyCode;
+
+					@FXML
+					public Label keyLabel;
+
+					@Override
+					public void show(AnchorPane settingsPane) {
+						showFXMLFile("fxml/keySettings.fxml", settingsPane);
+						settingsPane.getScene().addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+
+							keyCode = event.getCode().ordinal();
+							keyLabel.setText(event.getCode().getName());
+
+						});
+					}
+
+					@Override
+					public String[] getArgs() {
+						return new String[]{"" + keyCode};
+					}
+
+					@Override
+					public void setSettingsFromArgs(String[] args) {
+						keyCode = Integer.parseInt(args[0]);
+						for (KeyCode k : KeyCode.values())
+							if (k.ordinal() == keyCode)
+								keyLabel.setText(k.getName());
+					}
+
 				};
 			},
+			BUTTONS
+	),
+	SHORTCUT(
+			"Toetsen combinati",
+			args -> {
+				int[] keyCodes = new int[args.length];
+
+				for (int i = 0; i < args.length; i++)
+					keyCodes[i] = Integer.parseInt(args[i]);
+
+				return new KeyActuator(keyCodes);
+			},
+			() -> null,
 			BUTTONS
 	);
 

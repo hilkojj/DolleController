@@ -54,7 +54,7 @@ public class UI {
 			new Box(
 					"Pijltjes",
 					new Vector2(0, 64 + 265), new Vector2(360, 140),
-					LEFT, RIGHT, UP, DOWN
+					UP, LEFT, DOWN, RIGHT
 			),
 			new Box(
 					"Linker Genotsstok",
@@ -69,7 +69,7 @@ public class UI {
 			new Box(
 					"Figuurtjes",
 					new Vector2(WIDTH - 380, 64 + 265), new Vector2(40, 140),
-					SQUARE, CIRCLE, TRIANGLE, CROSS
+					TRIANGLE, SQUARE, CROSS, CIRCLE
 			),
 			new Box(
 					"Rechter Genotsstok",
@@ -309,8 +309,6 @@ public class UI {
 
 				FXMLLoader loader = new FXMLLoader();
 				Parent p = loader.load(Gdx.files.internal("fxml/edit.fxml").read());
-				EditDialogController c = loader.getController();
-				c.init(i);
 
 				Stage stage = new Stage();
 				stage.getIcons().add(new Image(Gdx.files.internal(i.iconPath).read()));
@@ -320,6 +318,9 @@ public class UI {
 				stage.setResizable(false);
 				countDialogs(stage);
 				stage.show();
+
+				EditDialogController c = loader.getController();
+				c.init(i);
 
 			} catch (IOException e) {
 				e.printStackTrace();
