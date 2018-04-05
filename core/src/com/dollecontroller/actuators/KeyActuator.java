@@ -7,6 +7,7 @@ public class KeyActuator extends Actuator {
 
 	private String name;
 	private final int[] keyCodes;
+	private boolean prevPressed;
 
 	public KeyActuator(int... keyCodes) {
 
@@ -25,10 +26,22 @@ public class KeyActuator extends Actuator {
 	@Override
 	public void update(Input i, long deltaTime) {
 
+		boolean pressed = digitalRead(i);
+
+		if (pressed && !prevPressed)
+			for (int keyCode : keyCodes)
+				robot.keyPress(keyCode);
+
+		if (!pressed && prevPressed)
+			for (int keyCode : keyCodes)
+				robot.keyRelease(keyCode);
+
+		prevPressed = pressed;
 	}
 
 	@Override
 	public String toString() {
 		return name;
 	}
+
 }

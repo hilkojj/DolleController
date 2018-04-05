@@ -18,4 +18,8 @@ public abstract class Actuator {
 
 	public abstract void update(Input i, long deltaTime);
 
+	public boolean digitalRead(Input i) {
+		return i.value.equals("1"); // todo??
+	}
+
 }

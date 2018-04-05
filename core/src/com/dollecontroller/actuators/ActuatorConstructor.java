@@ -2,6 +2,7 @@ package com.dollecontroller.actuators;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.dollecontroller.DolleApp;
 import com.dollecontroller.input.Input;
 import javafx.fxml.FXML;
@@ -113,7 +114,49 @@ public enum ActuatorConstructor {
 
 				return new KeyActuator(keyCodes);
 			},
-			() -> null,
+			() -> {
+				return new Settings() {
+
+					Array<Integer> keyCodes = new Array<>();
+
+					@FXML
+					public Label label;
+
+					@Override
+					public void show(AnchorPane settingsPane) {
+						showFXMLFile("fxml/shortcutSettings.fxml", settingsPane);
+						settingsPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+
+							int keyCode = event.getCode().ordinal();
+
+							for (int k : keyCodes)
+								if (k == keyCode)
+									return;
+
+							keyCodes.add(keyCode);
+
+							String s = (keyCodes.size == 1 ? "" : label.getText() + " + ") + event.getCode().getName();
+							label.setText(s);
+
+						});
+					}
+
+					@FXML
+					public void reset() {
+						keyCodes.clear();
+						label.setText("...");
+					}
+
+					@Override
+					public String[] getArgs() {
+						String[] args = new String[keyCodes.size];
+						for (int i = 0; i < args.length; i++)
+							args[i] = String.valueOf(keyCodes.get(i));
+						return args;
+					}
+
+				};
+			},
 			BUTTONS
 	);
 
