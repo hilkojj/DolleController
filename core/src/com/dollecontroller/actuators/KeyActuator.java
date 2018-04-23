@@ -17,7 +17,7 @@ public class KeyActuator extends Actuator {
 
 		for (int keyInt : keyCodes)
 			for (KeyCode k : KeyCode.values())
-				if (k.ordinal() == keyInt)
+				if (k.impl_getCode() == keyInt)
 					name += (name.length() == 0 ? "" : " + ") + k.getName();
 
 

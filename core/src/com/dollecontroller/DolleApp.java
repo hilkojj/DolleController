@@ -27,7 +27,7 @@ public class DolleApp extends Application implements ApplicationListener {
 	public static View3D view3D;
 	public static UI ui;
 	public static boolean running = true, inFront = true;
-	public static String configName = "Configuratie 1";
+	public static String configName = DEFAULT_CONFIG_NAME;
 	public static int dialogs;
 
 	private String prevBackgroundPath;

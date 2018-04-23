@@ -4,12 +4,12 @@ import com.dollecontroller.input.Input;
 
 import java.awt.*;
 
-public class MouseActuator extends Actuator {
+public class JoyStickMouseActuator extends Actuator {
 
 	private float sensitivity, deltaX, deltaY;
 	private boolean invertY;
 
-	public MouseActuator(float sensitivity, boolean invertY) {
+	public JoyStickMouseActuator(float sensitivity, boolean invertY) {
 		this.sensitivity = sensitivity;
 		this.invertY = invertY;
 	}

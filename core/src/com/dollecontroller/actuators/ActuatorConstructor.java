@@ -22,9 +22,9 @@ import static com.dollecontroller.input.Input.JOYSTICKS;
 
 public enum ActuatorConstructor {
 
-	MOUSE(
+	JOYSTICK_MOUSE(
 			"Muis bewegen",
-			args -> new MouseActuator(
+			args -> new JoyStickMouseActuator(
 					Float.parseFloat(args[0]),
 					Boolean.parseBoolean(args[1])
 			),
@@ -65,6 +65,20 @@ public enum ActuatorConstructor {
 			JOYSTICKS
 
 	),
+	MOUSE_MOVE(
+			"Beweeg muis",
+			args -> new MouseMoveActuator(Integer.parseInt(args[0]), Float.parseFloat(args[1])),
+			() -> {
+				return new Settings() {
+
+					@Override
+					public void show(AnchorPane settingsPane) {
+						showFXMLFile("fxml/mouseMoveSettings.fxml", settingsPane);
+					}
+				};
+			},
+			BUTTONS
+	),
 	KEY(
 			"Toets indrukken",
 			args -> new KeyActuator(Integer.parseInt(args[0])),
@@ -81,7 +95,7 @@ public enum ActuatorConstructor {
 						showFXMLFile("fxml/keySettings.fxml", settingsPane);
 						settingsPane.getScene().addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 
-							keyCode = event.getCode().ordinal();
+							keyCode = event.getCode().impl_getCode();
 							keyLabel.setText(event.getCode().getName());
 
 						});
@@ -96,7 +110,7 @@ public enum ActuatorConstructor {
 					public void setSettingsFromArgs(String[] args) {
 						keyCode = Integer.parseInt(args[0]);
 						for (KeyCode k : KeyCode.values())
-							if (k.ordinal() == keyCode)
+							if (k.impl_getCode() == keyCode)
 								keyLabel.setText(k.getName());
 					}
 
@@ -127,16 +141,8 @@ public enum ActuatorConstructor {
 						showFXMLFile("fxml/shortcutSettings.fxml", settingsPane);
 						settingsPane.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 
-							int keyCode = event.getCode().ordinal();
-
-							for (int k : keyCodes)
-								if (k == keyCode)
-									return;
-
-							keyCodes.add(keyCode);
-
-							String s = (keyCodes.size == 1 ? "" : label.getText() + " + ") + event.getCode().getName();
-							label.setText(s);
+							int keyCode = event.getCode().impl_getCode();
+							addKeyCode(keyCode);
 
 						});
 					}
@@ -153,6 +159,33 @@ public enum ActuatorConstructor {
 						for (int i = 0; i < args.length; i++)
 							args[i] = String.valueOf(keyCodes.get(i));
 						return args;
+					}
+
+					@Override
+					public void setSettingsFromArgs(String[] args) {
+						for (String arg : args)
+							addKeyCode(Integer.parseInt(arg));
+					}
+
+					private void addKeyCode(int keyCode) {
+						for (int k : keyCodes)
+							if (k == keyCode)
+								return;
+
+						keyCodes.add(keyCode);
+
+						String name = null;
+						for (KeyCode k : KeyCode.values()) {
+							if (k.impl_getCode() == keyCode) {
+								name = k.getName();
+								break;
+							}
+						}
+						if (name == null)
+							return;
+
+						String s = (keyCodes.size == 1 ? "" : label.getText() + " + ") + name;
+						label.setText(s);
 					}
 
 				};
